@@ -3,8 +3,8 @@
 {% block content %}
 <h2>Adicionar Nova Categoria</h2>
 <form method="POST" action="{{ url_for('adicionar_categoria') }}">
-    <div class="form-group">
-        <label for="nome">Nome da Categoria:</label>
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome da Categoria:</label>
         <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome da categoria" required>
     </div>
     <button type="submit" class="btn btn-success">Adicionar Categoria</button>

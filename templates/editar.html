@@ -3,34 +3,44 @@
 {% block content %}
 <h2>Editar Material</h2>
 <form method="POST">
-    <div class="form-group">
-        <label for="nome">Nome do Material:</label>
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome do Material:</label>
         <input type="text" name="nome" id="nome" class="form-control" value="{{ material.nome }}" required>
     </div>
-    <div class="form-group">
-        <label for="descricao">Descrição:</label>
+    <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição:</label>
         <textarea name="descricao" id="descricao" class="form-control">{{ material.descricao }}</textarea>
     </div>
-    <div class="form-group">
-        <label for="quantidade">Quantidade:</label>
+    <div class="mb-3">
+        <label for="quantidade" class="form-label">Quantidade Atual:</label>
         <input type="number" name="quantidade" id="quantidade" class="form-control" min="0" value="{{ material.quantidade }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="quantidade_minima" class="form-label">Quantidade Mínima Geral:</label>
+        <input type="number" name="quantidade_minima" id="quantidade_minima" class="form-control" min="0" value="{{ material.quantidade_minima }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="quantidade_alerta_requisicao" class="form-label">Quantidade para Alerta de Requisição:</label>
+        <input type="number" name="quantidade_alerta_requisicao" id="quantidade_alerta_requisicao" class="form-control" min="0" value="{{ material.quantidade_alerta_requisicao }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="quantidade_alerta_estoque" class="form-label">Quantidade para Alerta de Estoque Crítico:</label>
+        <input type="number" name="quantidade_alerta_estoque" id="quantidade_alerta_estoque" class="form-control" min="0" value="{{ material.quantidade_alerta_estoque }}" required>
     </div>
     <div class="form-check mb-3">
         <input type="checkbox" name="zerar" id="zerar" class="form-check-input">
         <label for="zerar" class="form-check-label">Zerar Quantidade</label>
     </div>
-    <button type="submit" class="btn btn-success">Atualizar</button>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
-    
-    <div class="form-group">
-        <label for="categoria">Categoria:</label>
-        <select name="categoria" id="categoria" class="form-control">
+    <div class="mb-3">
+        <label for="categoria" class="form-label">Categoria:</label>
+        <select name="categoria" id="categoria" class="form-select">
             <option value="">Selecione uma categoria</option>
             {% for cat in categorias %}
                 <option value="{{ cat.id }}" {% if material.categoria_id == cat.id %}selected{% endif %}>{{ cat.nome }}</option>
             {% endfor %}
         </select>
     </div>
-    
+    <button type="submit" class="btn btn-success">Atualizar</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
 </form>
 {% endblock %}

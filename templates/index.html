@@ -4,7 +4,6 @@
 <h1>Inventário do Almoxarifado</h1>
 <a href="{{ url_for('adicionar') }}" class="btn btn-primary mb-3">Adicionar Material</a>
 
-<!-- Dropdown para escolher a ordenação -->
 <div class="mb-3">
   <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="orderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,44 +19,51 @@
 </div>
 
 <table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Quantidade</th>
-            <th>Categoria</th>
-            <th>QR Code</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for mat in materiais %}
-        <tr>
-            <td>{{ mat.id }}</td>
-            <td>{{ mat.nome }}</td>
-            <td>{{ mat.descricao }}</td>
-            <td>{{ mat.quantidade }}</td>
-            <td>
-                {% if mat.categoria %}
-                    {{ mat.categoria.nome }}
-                {% else %}
-                    Sem categoria
-                {% endif %}
-            </td>
-            <td>
-                {% if mat.qr_code_file %}
-                    <img src="{{ url_for('static', filename='qr_codes/' ~ mat.qr_code_file) }}" alt="QR Code" class="img-fluid" style="max-width: 100px;">
-                {% else %}
-                    N/A
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('editar', id=mat.id) }}" class="btn btn-warning btn-sm">Editar</a>
-                <a href="{{ url_for('remover', id=mat.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover?');">Remover</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Quantidade e Alertas</th>
+      <th>Categoria</th>
+      <th>QR Code</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for mat in materiais %}
+    <tr>
+      <td>{{ mat.id }}</td>
+      <td>{{ mat.nome }}</td>
+      <td>{{ mat.descricao }}</td>
+      <td>
+        {{ mat.quantidade }}
+        {% if mat.quantidade < mat.quantidade_alerta_estoque %}
+          <span class="badge bg-danger">Estoque Crítico</span>
+        {% elif mat.quantidade < mat.quantidade_alerta_requisicao %}
+          <span class="badge bg-warning">Requisição Necessária</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if mat.categoria %}
+          {{ mat.categoria.nome }}
+        {% else %}
+          Sem categoria
+        {% endif %}
+      </td>
+      <td>
+        {% if mat.qr_code_file %}
+          <img src="{{ url_for('static', filename='qr_codes/' ~ mat.qr_code_file) }}" alt="QR Code" class="img-fluid" style="max-width: 100px;">
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('editar', id=mat.id) }}" class="btn btn-warning btn-sm">Editar</a>
+        <a href="{{ url_for('remover', id=mat.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja remover?');">Remover</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endblock %}
