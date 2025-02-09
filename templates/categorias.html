@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Lista de Categorias</h2>
+<ul class="list-group">
+    {% for cat in categorias %}
+    <li class="list-group-item">{{ cat.nome }}</li>
+    {% endfor %}
+</ul>
+<br>
+<a href="{{ url_for('adicionar_categoria') }}" class="btn btn-primary">Adicionar Nova Categoria</a>
+{% endblock %}

@@ -1,0 +1,15 @@
+/* static/css/styles.css */
+
+/* Definindo a fonte padrão e um fundo suave */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Estilo para botões customizados, se desejar */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Outros ajustes que você desejar podem ser adicionados aqui */
