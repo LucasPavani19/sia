@@ -29,7 +29,7 @@ class Material(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.String(200), nullable=True)
     quantidade = db.Column(db.Integer, default=0)
-    quantidade_minima = db.Column(db.Integer, default=0)
+    # O campo quantidade_minima foi removido
     quantidade_alerta_requisicao = db.Column(db.Integer, default=0)
     quantidade_alerta_estoque = db.Column(db.Integer, default=0)
     qr_code_file = db.Column(db.String(100), nullable=True)
@@ -52,7 +52,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
-    # Apenas usuários aprovados serão considerados ativos pelo Flask-Login
+    # Apenas usuários aprovados são considerados ativos pelo Flask-Login
     @property
     def is_active(self):
         return self.approved
@@ -72,7 +72,7 @@ if not os.path.exists(qr_folder):
     os.makedirs(qr_folder)
 
 def gerar_qr_code(material):
-    # Altere o endereço conforme o IP/host de seu servidor
+    # Ajuste o endereço conforme necessário (exemplo para intranet)
     conteudo = f"http://192.168.0.100/editar/{material.id}"
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(conteudo)
@@ -135,8 +135,9 @@ def adicionar():
         nome = request.form['nome']
         descricao = request.form['descricao']
         quantidade = int(request.form['quantidade'])
-        quantidade_minima = int(request.form.get('quantidade_minima', 0))
-        # Se desejar, você pode adicionar campos para quantidade_alerta_requisicao e quantidade_alerta_estoque no formulário de adição.
+        # Como removemos o campo quantidade_minima, usamos apenas os campos de alerta:
+        quantidade_alerta_requisicao = int(request.form.get('quantidade_alerta_requisicao', 0))
+        quantidade_alerta_estoque = int(request.form.get('quantidade_alerta_estoque', 0))
         categoria_id = request.form.get('categoria')
         if not categoria_id:
             categoria_id = None
@@ -144,7 +145,8 @@ def adicionar():
             nome=nome,
             descricao=descricao,
             quantidade=quantidade,
-            quantidade_minima=quantidade_minima,
+            quantidade_alerta_requisicao=quantidade_alerta_requisicao,
+            quantidade_alerta_estoque=quantidade_alerta_estoque,
             categoria_id=categoria_id
         )
         db.session.add(novo_material)
@@ -181,7 +183,7 @@ def editar(id):
             material.quantidade = 0
         else:
             material.quantidade = int(request.form['quantidade'])
-        material.quantidade_minima = int(request.form.get('quantidade_minima', material.quantidade_minima))
+        # Atualiza os campos de alerta
         material.quantidade_alerta_requisicao = int(request.form.get('quantidade_alerta_requisicao', material.quantidade_alerta_requisicao))
         material.quantidade_alerta_estoque = int(request.form.get('quantidade_alerta_estoque', material.quantidade_alerta_estoque))
         categoria_id = request.form.get('categoria')
@@ -243,7 +245,6 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
-            # Se o usuário não estiver aprovado, exibe mensagem e não faz login
             if not user.approved:
                 flash('Seu registro está aguardando autorização do administrador.', 'warning')
                 return redirect(url_for('login'))
